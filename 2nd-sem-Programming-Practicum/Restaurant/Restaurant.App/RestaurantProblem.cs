@@ -3,15 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Globalization;
 using System.Text;
-using ClassLibrary;
+using Restaurant.Models;
 
-namespace ConsoleApp
+namespace Restaurant
 {
 	class RestaurantProblem
 	{
 		static void Main()
 		{
-			Console.OutputEncoding = Encoding.UTF8;
+			//create lists of diff types of products
+			List<Beverage> beverages = new List<Beverage>();
+            List<Dessert> desserts = new List<Dessert>();
+            List<Mains> mains = new List<Mains>();
+            List<Salad> salads = new List<Salad>();
+            List<Soup> soups = new List<Soup>();
+
+            Console.OutputEncoding = Encoding.UTF8;
 			Console.InputEncoding = Encoding.GetEncoding(1251);
 			Console.Write("Hello there! Please tell me how many products are going to be on the menu: ");
 			int countProducts = int.Parse(Console.ReadLine());
@@ -41,19 +48,22 @@ namespace ConsoleApp
 					while(countInputProducts < countProducts)
 					{
 						Console.InputEncoding = Encoding.GetEncoding(1251); ;
-						string[] inputProductInfo = Console.ReadLine().ToLower().Split(delimeters, StringSplitOptions.RemoveEmptyEntries).ToArray();
+						string[] inputProductInfo = Console.ReadLine()
+							.ToLower()
+							.Split(delimeters, StringSplitOptions.RemoveEmptyEntries)
+							.ToArray();
 
 						if (inputProductInfo[0] == "salad" || inputProductInfo[0] == "салата")
 						{
 							Salad salad = new Salad(inputProductInfo[1], Convert.ToDouble(inputProductInfo[2], cultures), Convert.ToDecimal(inputProductInfo[3], cultures));
-							bool contains = Salad.saladList.Any(p => p.Name == salad.Name);
+							bool contains = salads.Any(p => p.Name == salad.Name);
 							if (contains == true)
 							{
 								Console.WriteLine("\nYou have already input this product. \n");
 							}
 							else
 							{
-								Salad.saladList.Add(salad);
+								salads.Add(salad);
 								countInputProducts++;
 							}
 						}
@@ -61,59 +71,59 @@ namespace ConsoleApp
 						if (inputProductInfo[0] == "soup" || inputProductInfo[0] == "супа")
 						{
 							Soup soup = new Soup(inputProductInfo[1], Convert.ToDouble(inputProductInfo[2], cultures), Convert.ToDecimal(inputProductInfo[3], cultures));
-							bool contains = Soup.soupsList.Any(p => p.Name == soup.Name);
+							bool contains = soups.Any(p => p.Name == soup.Name);
 							if (contains == true)
 							{
 								Console.WriteLine("\nYou have already input this product. \n");
 							}
 							else
 							{
-								Soup.soupsList.Add(soup);
+								soups.Add(soup);
 								countInputProducts++;
 							}
 						}
 
 						if (inputProductInfo[0] == "main" || inputProductInfo[0] == "основно ястие")
 						{
-							Mains main = new Mains(inputProductInfo[1], Convert.ToDouble(inputProductInfo[2], cultures), Convert.ToDecimal(inputProductInfo[3], cultures), Convert.ToDouble(inputProductInfo[2], cultures) * 1);
-							bool contains = Mains.mainsList.Any(p => p.Name == main.Name);
+							Mains main = new Mains(inputProductInfo[1], Convert.ToDouble(inputProductInfo[2], cultures), Convert.ToDecimal(inputProductInfo[3], cultures));
+							bool contains = mains.Any(p => p.Name == main.Name);
 							if (contains == true)
 							{
 								Console.WriteLine("\nYou have already input this product. \n");
 							}
 							else
 							{
-								Mains.mainsList.Add(main);
+								mains.Add(main);
 								countInputProducts++;
 							}
 						}
 
 						if (inputProductInfo[0] == "dessert" || inputProductInfo[0] == "десерт")
 						{
-							Dessert dessert = new Dessert(inputProductInfo[1], Convert.ToDouble(inputProductInfo[2], cultures), Convert.ToDecimal(inputProductInfo[3], cultures), Convert.ToDouble(inputProductInfo[2], cultures) * 3);
-							bool contains = Dessert.dessertsList.Any(p => p.Name == dessert.Name);
+							Dessert dessert = new Dessert(inputProductInfo[1], Convert.ToDouble(inputProductInfo[2], cultures), Convert.ToDecimal(inputProductInfo[3], cultures));
+							bool contains = desserts.Any(p => p.Name == dessert.Name);
 							if (contains == true)
 							{
 								Console.WriteLine("\nYou have already input this product. \n");
 							}
 							else
 							{
-								Dessert.dessertsList.Add(dessert);
+                                desserts.Add(dessert);
 								countInputProducts++;
 							}
 						}
 
 						if (inputProductInfo[0] == "beverage" || inputProductInfo[0] == "напитка")
 						{
-							Beverage beverage = new Beverage(inputProductInfo[1], Convert.ToDouble(inputProductInfo[2], cultures), Convert.ToDecimal(inputProductInfo[3], cultures), Convert.ToDouble(inputProductInfo[2], cultures) * 3);
-							bool contains = Beverage.beveragesList.Any(p => p.Name == beverage.Name);
+							Beverage beverage = new Beverage(inputProductInfo[1], Convert.ToDouble(inputProductInfo[2], cultures), Convert.ToDecimal(inputProductInfo[3], cultures));
+							bool contains = beverages.Any(p => p.Name == beverage.Name);
 							if (contains == true)
 							{
 								Console.WriteLine("\nYou have already input this product. \n");
 							}
 							else
 							{
-								Beverage.beveragesList.Add(beverage);
+								beverages.Add(beverage);
 								countInputProducts++;
 							}
 						}
@@ -225,7 +235,7 @@ namespace ConsoleApp
 					}
 
 					//calculating balance, orders, etc..
-					foreach (var item in Salad.saladList)
+					foreach (var item in salads)
 					{
 						for (int i = 1; i < ordersAndCommands.Count; i++)
 						{
@@ -237,7 +247,7 @@ namespace ConsoleApp
 							}
 						}
 					}
-					foreach (var item in Soup.soupsList)
+					foreach (var item in soups)
 					{
 						for (int i = 1; i < ordersAndCommands.Count; i++)
 						{
@@ -249,7 +259,7 @@ namespace ConsoleApp
 							}
 						}
 					}
-					foreach (var item in Mains.mainsList)
+					foreach (var item in mains)
 					{
 						for (int i = 1; i < ordersAndCommands.Count; i++)
 						{
@@ -261,7 +271,7 @@ namespace ConsoleApp
 							}
 						}
 					}
-					foreach (var item in Dessert.dessertsList)
+					foreach (var item in desserts)
 					{
 						for (int i = 1; i < ordersAndCommands.Count; i++)
 						{
@@ -273,7 +283,7 @@ namespace ConsoleApp
 							}
 						}
 					}
-					foreach (var item in Beverage.beveragesList)
+					foreach (var item in beverages)
 					{
 						for (int i = 1; i < ordersAndCommands.Count; i++)
 						{
